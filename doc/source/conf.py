@@ -42,6 +42,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'sphinx_gallery.gen_gallery',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -169,3 +170,15 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# -- Options for Sphinx-Gallery extension ------------------------------------
+
+sphinx_gallery_conf = {
+    # path to your examples scripts
+    'examples_dirs': '../../examples',
+    # path where to save gallery generated examples
+    'gallery_dirs': 'gallery',
+    # Just for suppressing warning (for now):
+    # https://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html#adding-references-to-examples
+    'backreferences_dir': 'api',
+}

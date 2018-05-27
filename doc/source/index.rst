@@ -10,6 +10,7 @@ Welcome to adaptiveheatmap's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   gallery/index.rst
 
 
 Indices and tables
