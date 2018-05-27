@@ -189,7 +189,7 @@ class AdaptiveHeatmap(object):
     def colorbar_quantile(self):
         zmin = self.zdata.min()
         zmax = self.zdata.max()
-        gradient = self.quantile_norm(numpy.linspace(0, 1, 256))
+        gradient = self.quantile_norm(numpy.linspace(zmin, zmax, 256))
         gradient = numpy.vstack((gradient, gradient))
         self.cax_quantile.imshow(
             gradient, aspect='auto',
