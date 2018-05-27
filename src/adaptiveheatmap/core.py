@@ -266,9 +266,10 @@ def make_shortcut(name):
     return f
 
 
-pcolormesh = make_shortcut('pcolormesh')
-pcolor = make_shortcut('pcolor')
-imshow = make_shortcut('imshow')
-matshow = make_shortcut('matshow')
+# Shortcuts:
 contour = make_shortcut('contour')
 contourf = make_shortcut('contourf')
+imshow = make_shortcut('imshow')
+matshow = make_shortcut('matshow')
+pcolor = make_shortcut('pcolor')
+pcolormesh = make_shortcut('pcolormesh')
