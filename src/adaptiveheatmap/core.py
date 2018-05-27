@@ -1,3 +1,5 @@
+import warnings
+
 from matplotlib import colors
 from matplotlib import gridspec
 from matplotlib import pyplot
@@ -105,7 +107,11 @@ class AHEventHandler(object):
         else:
             xyz.remove()
 
-        self.xyz = self.ah.draw_xyz(x, y)
+        try:
+            self.xyz = self.ah.draw_xyz(x, y)
+        except NotImplementedError:
+            return
+
         self.ah.figure.canvas.draw()
 
 
@@ -251,6 +257,8 @@ class AdaptiveHeatmap(object):
             # w = self.mappable._meshWidth
             # zs.reshape(h, w)
             # # https://stackoverflow.com/a/34841871
+        warnings.warn('z value from (x, y)-coordinate cannot be recovered'
+                      ' from {}'.format(type(self.mappable)))
         raise NotImplementedError
 
     def draw_xyz(self, *args, **kwargs):
