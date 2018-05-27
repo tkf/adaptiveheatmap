@@ -18,7 +18,8 @@ setup(
         # see: http://pypi.python.org/pypi?%3Aaction=list_classifiers
     ],
     install_requires=[
-        # 'SOME_PACKAGE',
+        'numpy',
+        'matplotlib',
     ],
     # entry_points={
     #     'console_scripts': ['PROGRAM_NAME = adaptiveheatmap.cli:main'],

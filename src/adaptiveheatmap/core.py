@@ -193,29 +193,3 @@ imshow = make_shortcut('imshow')
 matshow = make_shortcut('matshow')
 contour = make_shortcut('contour')
 contourf = make_shortcut('contourf')
-
-
-def demos():
-    from matplotlib.mlab import bivariate_normal
-
-    N = 100
-    X, Y = numpy.mgrid[-3:3:complex(0, N), -2:2:complex(0, N)]
-    Z1 = bivariate_normal(X, Y, 0.1, 0.2, 1.0, 1.0) +  \
-        0.1 * bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
-    # https://matplotlib.org/users/colormapnorms.html
-
-    ah = pcolormesh(X, Y, Z1)
-    ah.set_xlabel('X')
-    ah.set_ylabel('Y')
-    ah.set_zlabel('Z')
-    # ah.set_plabel('CDF')
-    yield ah
-
-    yield imshow(numpy.exp(numpy.random.random((100, 100))))
-
-    pyplot.show()
-
-
-if __name__ == '__main__':
-    for _ in demos():
-        pass
