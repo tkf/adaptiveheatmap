@@ -1,0 +1,15 @@
+sudo: false
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+before_install:
+  - pip install --quiet tox-travis coveralls
+script:
+  - tox --develop -- --cov adaptiveheatmap
+  # Use --develop so that files are visible in coveralls.io
+after_success:
+  - coveralls
+notifications:
+  email: false
