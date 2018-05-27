@@ -1,6 +1,7 @@
 from matplotlib import colors
 from matplotlib import gridspec
 from matplotlib import pyplot
+from matplotlib.collections import QuadMesh
 import numpy
 
 
@@ -56,6 +57,58 @@ def cumhist(data, normed=True, ylabel=None, ax=None,
     return lines
 
 
+class XYZRelation(object):
+
+    def __init__(self, ah):
+        self.ah = ah
+
+    def draw(self, x, y, marker='o', color='k'):
+        self.lines = lines = []
+        ah = self.ah
+        z = ah.z_at(x, y)
+        p = ah.quantile_norm(z)
+
+        lines.extend(ah.ax_main.plot(x, y, marker=marker, color=color))
+        lines.extend(ah.ax_cdf.plot(z, p, marker=marker, color=color))
+        lines.append(ah.ax_cdf.axhline(p, color=color))
+        lines.append(ah.ax_cdf.axvline(z, color=color))
+        lines.append(ah.cax_quantile.axvline(z, color=color))
+        lines.append(ah.cax_original.axhline(p, color=color))
+
+        return self
+
+    def get_artists(self):
+        return self.lines
+
+    def remove(self):
+        for art in self.get_artists():
+            art.remove()
+
+
+class AHEventHandler(object):
+
+    def __init__(self, ah):
+        self.ah = ah
+
+    def connect(self):
+        self.ah.figure.canvas.mpl_connect('button_press_event', self.onclick)
+
+    def onclick(self, event):
+        if event.inaxes is self.ah.ax_main:
+            self.redraw_xyz(event.xdata, event.ydata)
+
+    def redraw_xyz(self, x, y):
+        try:
+            xyz = self.xyz
+        except AttributeError:
+            pass
+        else:
+            xyz.remove()
+
+        self.xyz = self.ah.draw_xyz(x, y)
+        self.ah.figure.canvas.draw()
+
+
 class AdaptiveHeatmap(object):
 
     @classmethod
@@ -89,6 +142,9 @@ class AdaptiveHeatmap(object):
         self.cax_original = cax_original
         self.figure = ax_main.figure
         self.gs = gs
+
+        self.event_handler = AHEventHandler(self)
+        self.event_handler.connect()
 
     def get_zdata(self, name, args):
         return args[-1].flatten()
@@ -176,6 +232,29 @@ class AdaptiveHeatmap(object):
 
     def set_plabel(self, label):
         self.ax_cdf.set_ylabel(label)
+
+    def z_at(self, x, y):
+        zs = self.mappable.get_array()
+        if zs.ndim == 2 and hasattr(self.mappable, 'get_extent'):
+            nx, ny = zs.shape
+            left, right, bottom, top = self.mappable.get_extent()
+            ix = int((x - left) / (right - left) * (nx - 1))
+            iy = int((x - bottom) / (top - bottom) * (ny - 1))
+            return zs[ix, iy]
+        elif isinstance(self.mappable, QuadMesh):
+            coords = self.mappable._coordinates[1:, 1:, :]
+            point = numpy.array([x, y]).reshape((1, 1, 2))
+            i = abs(coords - point).sum(axis=-1).argmin()  # closest point
+            # assert coords[:, :, 0].size == zs.size
+            return zs[i]
+            # h = self.mappable._meshHeight
+            # w = self.mappable._meshWidth
+            # zs.reshape(h, w)
+            # # https://stackoverflow.com/a/34841871
+        raise NotImplementedError
+
+    def draw_xyz(self, *args, **kwargs):
+        return XYZRelation(self).draw(*args, **kwargs)
 
 
 def make_shortcut(name):
