@@ -16,6 +16,23 @@ import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+try:
+    import matplotlib
+except ImportError:
+    pass
+else:
+    matplotlib.use('agg')
+
+    import matplotlib.pyplot
+    matplotlib.pyplot.style.use('ggplot')
+
+    try:
+        matplotlib.cm.get_cmap('cividis')
+    except ValueError:
+        pass
+    else:
+        matplotlib.rcParams['image.cmap'] = 'cividis'
+
 
 # -- Project information -----------------------------------------------------
 
