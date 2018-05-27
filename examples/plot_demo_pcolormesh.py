@@ -14,7 +14,7 @@ import adaptiveheatmap
 pyplot.style.use("seaborn-pastel")
 
 X, Y, Z = data_hump_and_spike()
-ah = adaptiveheatmap.pcolormesh(X, Y, Z)
+ah = adaptiveheatmap.pcolormesh(X, Y, Z, cmap='plasma')
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')

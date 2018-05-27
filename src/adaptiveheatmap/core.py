@@ -187,7 +187,8 @@ class AdaptiveHeatmap(object):
         gradient = numpy.vstack((gradient, gradient))
         self.cax_quantile.imshow(
             gradient, aspect='auto',
-            extent=(zmin, zmax, 0, 1)  # left, right, bottom, top
+            extent=(zmin, zmax, 0, 1),  # left, right, bottom, top
+            cmap=self.mappable.cmap,
         )
         self.cax_quantile.set_yticks([])  # no yticks
         # self.figure.colorbar(
@@ -200,7 +201,8 @@ class AdaptiveHeatmap(object):
         gradient = numpy.vstack((gradient, gradient)).T
         self.cax_original.imshow(
             gradient, aspect='auto',
-            extent=(0, 1, 0, 1)  # left, right, bottom, top
+            extent=(0, 1, 0, 1),  # left, right, bottom, top
+            cmap=self.mappable.cmap,
         )
 
         self.cax_original.set_xticks([])  # no xticks

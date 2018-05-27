@@ -13,7 +13,7 @@ import adaptiveheatmap
 pyplot.style.use("ggplot")
 
 _X, _Y, Z = data_hump_and_spike()
-ah = adaptiveheatmap.imshow(Z)
+ah = adaptiveheatmap.imshow(Z, cmap='cividis')
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')

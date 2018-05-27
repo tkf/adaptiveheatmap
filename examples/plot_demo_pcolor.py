@@ -14,7 +14,7 @@ import adaptiveheatmap
 pyplot.style.use("fivethirtyeight")
 
 X, Y, Z = data_hump_and_spike()
-ah = adaptiveheatmap.pcolor(X, Y, Z)
+ah = adaptiveheatmap.pcolor(X, Y, Z, cmap='inferno')
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
