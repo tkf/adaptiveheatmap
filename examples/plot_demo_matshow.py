@@ -1,8 +1,9 @@
 """
-`.matshow` demo
----------------
+`matshow <.core.matshow>` demo
+------------------------------
 
-`.matshow` can be used like `matplotlib.pyplot.matshow`.
+`matshow <.core.matshow>` can be used like
+`matplotlib.pyplot.pcolormesh`.
 """
 
 from matplotlib import pyplot

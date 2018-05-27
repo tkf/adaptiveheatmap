@@ -1,8 +1,8 @@
 """
-`.imshow` demo
---------------
+`imshow <.core.imshow>` demo
+----------------------------
 
-`.imshow` can be used like `matplotlib.pyplot.imshow`.
+`imshow <.core.imshow>` can be used like `matplotlib.pyplot.imshow`.
 """
 
 from matplotlib import pyplot

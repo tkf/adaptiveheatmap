@@ -1,8 +1,9 @@
 """
-`.pcolormesh` demo
-------------------
+`pcolormesh <.core.pcolormesh>` demo
+------------------------------------
 
-`.pcolormesh` can be used like `matplotlib.pyplot.pcolormesh`.
+`pcolormesh <.core.pcolormesh>` can be used like
+`matplotlib.pyplot.pcolormesh`.
 """
 
 from matplotlib import pyplot
