@@ -271,6 +271,17 @@ def make_shortcut(name):
         ah.plot_all(name, *args, **kwargs)
         return ah
     f.__name__ = name
+    f.__doc__ = """
+    Adaptive heatmap version of `matplotlib.axes.Axes.{name}`.
+
+    All positional and keyword arguments are passed to
+    `matplotlib.axes.Axes.{name}`.
+
+    Returns
+    -------
+    ah : AdaptiveHeatmap
+        `ah.mappable` holds whatever `matplotlib.axes.Axes.{name}` returns.
+    """.format(name=name)
     return f
 
 

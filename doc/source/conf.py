@@ -12,7 +12,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -40,6 +40,8 @@ release = '0'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx_gallery.gen_gallery',
@@ -68,6 +70,10 @@ language = 'en'
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
 exclude_patterns = []
+
+# The reST default role (used for this markup: `text`) to use for all
+# documents.
+default_role = 'py:obj'
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -163,8 +169,13 @@ texinfo_documents = [
 
 # -- Options for intersphinx extension ---------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    # 'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+    'matplotlib': ('http://matplotlib.org/', None),
+    # 'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
+}
 
 # -- Options for todo extension ----------------------------------------------
 
@@ -182,3 +193,28 @@ sphinx_gallery_conf = {
     # https://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html#adding-references-to-examples
     'backreferences_dir': 'api',
 }
+
+
+# -- Run custom pre-build commands -------------------------------------------
+
+def run_apidoc(_):
+    """
+    Run sphinx-apidoc
+
+    See:
+    http://www.sphinx-doc.org/en/stable/extdev/appapi.html
+    https://github.com/rtfd/readthedocs.org/issues/1139
+    """
+    from sphinx.apidoc import main
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.dirname(os.path.dirname(here))
+    main(['--force', '--separate', '--private',
+          '--output-dir', os.path.join(here, 'api'),
+          # Module path:
+          os.path.join(root, 'src', 'adaptiveheatmap'),
+          # Exclude:
+          os.path.join(root, 'src', 'adaptiveheatmap', '__main__.py')])
+
+
+def setup(app):
+    app.connect('builder-inited', run_apidoc)
