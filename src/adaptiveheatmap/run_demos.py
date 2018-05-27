@@ -4,7 +4,7 @@ from . import demos
 
 
 def find_demos():
-    for name, fun in vars(demos).items():
+    for name, fun in sorted(vars(demos).items(), key=lambda x: x[0]):
         if name.startswith('demo_'):
             yield fun
 
