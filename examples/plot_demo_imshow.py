@@ -15,7 +15,7 @@ ah = adaptiveheatmap.imshow(Z)
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
-ah.draw_xyz(1, -0.2)
+ah.draw_xyz(80, 40)
 ah.figure.suptitle('imshow')
 
 pyplot.show()

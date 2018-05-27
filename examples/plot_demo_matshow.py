@@ -3,7 +3,7 @@
 ------------------------------
 
 `matshow <.core.matshow>` can be used like
-`matplotlib.pyplot.pcolormesh`.
+`matplotlib.pyplot.matshow`.
 """
 
 from matplotlib import pyplot
@@ -16,7 +16,7 @@ ah = adaptiveheatmap.matshow(Z)
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
-ah.draw_xyz(1, -0.2)
+ah.draw_xyz(40, 80)
 ah.figure.suptitle('matshow')
 
 pyplot.show()

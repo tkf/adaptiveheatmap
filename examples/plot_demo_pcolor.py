@@ -3,7 +3,7 @@
 ----------------------------
 
 `pcolor <.core.pcolor>` can be used like
-`matplotlib.pyplot.pcolormesh`.
+`matplotlib.pyplot.pcolor`.
 """
 
 from matplotlib import pyplot
