@@ -34,12 +34,6 @@ def cumhist(data, normed=True, ylabel=None, ax=None,
             **step_kwargs):
     """
     Plot cumulative distribution of `data`.
-
-    .. plot::
-       :include-source:
-
-       cumhist(numpy.random.randn(1000))
-
     """
     if ax is None:
         ax = pyplot.gca()
