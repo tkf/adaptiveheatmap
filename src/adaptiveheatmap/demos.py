@@ -4,7 +4,7 @@ from matplotlib.mlab import bivariate_normal
 from . import core
 
 
-def data_hump_and_spike(N=100, hump_scale=1.0):
+def data_hump_and_spike(N=100, hump_scale=10.0):
     X, Y = numpy.mgrid[-3:3:complex(0, N), -2:2:complex(0, N)]
     Z = bivariate_normal(X, Y, 0.1, 0.2, 1.0, 1.0) + \
         bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0) * hump_scale
