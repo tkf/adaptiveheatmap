@@ -10,6 +10,8 @@ from matplotlib import pyplot
 from adaptiveheatmap.demos import data_hump_and_spike
 import adaptiveheatmap
 
+pyplot.style.use("ggplot")
+
 _X, _Y, Z = data_hump_and_spike()
 ah = adaptiveheatmap.imshow(Z)
 ah.set_xlabel('X')

@@ -11,6 +11,8 @@ from matplotlib import pyplot
 from adaptiveheatmap.demos import data_hump_and_spike
 import adaptiveheatmap
 
+pyplot.style.use("bmh")
+
 _X, _Y, Z = data_hump_and_spike()
 ah = adaptiveheatmap.matshow(Z)
 ah.set_xlabel('X')

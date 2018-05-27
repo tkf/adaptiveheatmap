@@ -11,6 +11,8 @@ from matplotlib import pyplot
 from adaptiveheatmap.demos import data_hump_and_spike
 import adaptiveheatmap
 
+pyplot.style.use("fivethirtyeight")
+
 X, Y, Z = data_hump_and_spike()
 ah = adaptiveheatmap.pcolor(X, Y, Z)
 ah.set_xlabel('X')
