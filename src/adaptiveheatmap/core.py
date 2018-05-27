@@ -42,9 +42,9 @@ def cumhist(data, normed=True, ylabel=None, ax=None,
         ax = pyplot.gca()
     if ylabel is None:
         if normed:
-            ylabel = 'Probability'
+            ylabel = 'Cumulative Probability'
         else:
-            ylabel = 'Count'
+            ylabel = 'Cumulative Count'
     if normed:
         ys = numpy.linspace(1/len(data), 1, len(data))
     else:
