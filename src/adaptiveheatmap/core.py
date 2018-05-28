@@ -237,6 +237,14 @@ class AdaptiveHeatmap(object):
         self.event_handler = AHEventHandler(self)
         self.event_handler.connect()
 
+    @property
+    def mappable(self):
+        mbl = self.result
+        if isinstance(mbl, tuple):
+            return mbl[-1]  # hist2d
+        return mbl
+# https://matplotlib.org/api/_as_gen/matplotlib.pyplot.hist2d.html
+
     def plot_main(self, name, *args, **kwargs):
         norm = kwargs.pop('norm', None)
         norm_kw = kwargs.pop('norm_kw', {})
@@ -254,8 +262,8 @@ class AdaptiveHeatmap(object):
         self.norm = norm
 
         f = getattr(self.ax_main, name)
-        self.mappable = f(*args, norm=norm, **kwargs)
-        return self.mappable
+        self.result = f(*args, norm=norm, **kwargs)
+        return self.result
 
     @property
     def zdata(self):
@@ -264,7 +272,7 @@ class AdaptiveHeatmap(object):
     def plot_all(self, name, *args, **kwargs):
         self.plot_main(name, *args, **kwargs)
         self.plot_sub()
-        return self.mappable
+        return self.result
 
     def _make_fun(name):
         def f(self, *args, **kwargs):
@@ -297,6 +305,8 @@ class AdaptiveHeatmap(object):
 
     contour = _make_fun('contour')
     contourf = _make_fun('contourf')
+    hexbin = _make_fun('hexbin')
+    hist2d = _make_fun('hist2d')
     imshow = _make_fun('imshow')
     matshow = _make_fun('matshow')
     pcolor = _make_fun('pcolor')
@@ -431,7 +441,7 @@ def make_shortcut(name):
     Returns
     -------
     ah : AdaptiveHeatmap
-        `ah.mappable` holds whatever |Axes.{name}| returns.
+        `ah.result` holds whatever |Axes.{name}| returns.
 
     Examples
     --------
@@ -447,6 +457,8 @@ def make_shortcut(name):
 # Shortcuts:
 contour = make_shortcut('contour')
 contourf = make_shortcut('contourf')
+hexbin = make_shortcut('hexbin')
+hist2d = make_shortcut('hist2d')
 imshow = make_shortcut('imshow')
 matshow = make_shortcut('matshow')
 pcolor = make_shortcut('pcolor')
