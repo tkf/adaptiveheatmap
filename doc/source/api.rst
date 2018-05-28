@@ -1,8 +1,8 @@
-=================
- Quick reference
-=================
+===============
+ API reference
+===============
 
-.. currentmodule:: adaptiveheatmap.core
+.. currentmodule:: adaptiveheatmap
 
 .. autosummary::
 
@@ -10,3 +10,21 @@
    matshow
    pcolor
    pcolormesh
+   cumhist
+
+
+High-level interface
+====================
+
+.. autofunction:: imshow
+.. autofunction:: matshow
+.. autofunction:: pcolor
+.. autofunction:: pcolormesh
+.. autofunction:: cumhist
+
+
+Low-level interface
+===================
+
+.. autoclass:: AdaptiveHeatmap
+.. autoclass:: QuantileNormalize

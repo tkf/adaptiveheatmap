@@ -12,7 +12,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
+# import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -197,31 +197,3 @@ sphinx_gallery_conf = {
     'backreferences_dir': 'api',
 }
 # http://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html
-
-
-# -- Run custom pre-build commands -------------------------------------------
-
-def run_apidoc(_):
-    """
-    Run sphinx-apidoc
-
-    See:
-    http://www.sphinx-doc.org/en/stable/extdev/appapi.html
-    https://github.com/rtfd/readthedocs.org/issues/1139
-    """
-    try:
-        from sphinx.ext.apidoc import main
-    except ImportError:
-        from sphinx.apidoc import main
-    here = os.path.dirname(os.path.abspath(__file__))
-    root = os.path.dirname(os.path.dirname(here))
-    main(['--force', '--separate', '--private',
-          '--output-dir', os.path.join(here, 'api'),
-          # Module path:
-          os.path.join(root, 'src', 'adaptiveheatmap'),
-          # Exclude:
-          os.path.join(root, 'src', 'adaptiveheatmap', '__main__.py')])
-
-
-def setup(app):
-    app.connect('builder-inited', run_apidoc)

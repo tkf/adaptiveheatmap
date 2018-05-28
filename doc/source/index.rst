@@ -13,16 +13,6 @@ Welcome to adaptiveheatmap's documentation!
    api.rst
    gallery/index.rst
 
-.. toctree::
-   :maxdepth: 1
-
-   Module reference <api/adaptiveheatmap.rst>
-
-.. toctree::
-   :hidden:
-
-   api/modules.rst
-
 Indices and tables
 ==================
 
