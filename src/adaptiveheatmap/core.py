@@ -30,9 +30,13 @@ class QuantileNormalize(colors.Normalize):
         data : array
             data from which quantile is computed.
         qs : int or array, default: ``min(data.size, 100)``
-            If int, `qs`-quantiles are used.
-            If an array, ``qs * 100`` is passed to
-            `numpy.nanpercentile`.
+            If an int, `qs`-quantiles are used; i.e., it is converted
+            to an array by ``qs = numpy.linspace(0, 1, qs + 1)``.
+            If an array, it must be an increasing sequence of numbers
+            between 0 and 1 (``qs * 100`` is passed to
+            `numpy.nanpercentile`).  Note that usually `qs` should
+            start at 0 (``qs[0] == 0``) and end at 1 (``qs[-1] == 1``)
+            unless it is preferred to ignore extreme values.
         **kwargs
             Passed to `.__init__`.
 
@@ -40,7 +44,8 @@ class QuantileNormalize(colors.Normalize):
         if qs is None:
             qs = min(data.size, 100)
         if numpy.isscalar(qs):
-            qs = numpy.linspace(0, 1, qs)
+            qs = numpy.linspace(0, 1, qs + 1)
+            # "+ 1" so that each element is a multiple of `1/qs`.
         quantile = numpy.nanpercentile(data, qs * 100)
         return cls(quantile, **kwargs)
 
