@@ -167,6 +167,13 @@ man_pages = [
 
 # -- Options for Texinfo output ----------------------------------------------
 
+# -- Options for autodoc extension -------------------------------------------
+# http://www.sphinx-doc.org/en/master/ext/autodoc.html
+
+autodoc_default_flags = [
+    'members',
+]
+
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)

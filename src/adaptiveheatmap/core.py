@@ -168,17 +168,26 @@ class AdaptiveHeatmap(object):
         self.plot_sub()
         return self.mappable
 
-    def _make_fun(self, name):
-        def f(*args, **kwargs):
+    def _make_fun(name):
+        def f(self, *args, **kwargs):
             return self.plot_main(name, *args, **kwargs)
+        f.__name__ = name
+        f.__doc__ = """
+        Run `matplotlib.axes.Axes.{name}` with adaptive heatmap colorbar.
+
+        This method takes whatever `matplotlib.axes.Axes.{name}` takes
+        and returns whatever it returns.
+        """.format(name=name)
         return f
 
-    pcolormesh = property(lambda self: self._make_fun('pcolormesh'))
-    pcolor = property(lambda self: self._make_fun('pcolor'))
-    imshow = property(lambda self: self._make_fun('imshow'))
-    matshow = property(lambda self: self._make_fun('matshow'))
-    contour = property(lambda self: self._make_fun('contour'))
-    contourf = property(lambda self: self._make_fun('contourf'))
+    contour = _make_fun('contour')
+    contourf = _make_fun('contourf')
+    imshow = _make_fun('imshow')
+    matshow = _make_fun('matshow')
+    pcolor = _make_fun('pcolor')
+    pcolormesh = _make_fun('pcolormesh')
+
+    del _make_fun
 
     def plot_sub(self):
         self.colorbar_quantile()
