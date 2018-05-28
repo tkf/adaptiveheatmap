@@ -1,6 +1,4 @@
-Sphinx==1.7.4
-# Pin Sphinx version to avoid error from parse_sphinx_docopts:
-# https://travis-ci.org/tkf/adaptiveheatmap/jobs/384916878#L610
+Sphinx
 
 Pillow
 
