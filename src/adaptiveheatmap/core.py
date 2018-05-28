@@ -234,8 +234,23 @@ class AdaptiveHeatmap(object):
         self.figure = ax_main.figure
         self.gs = gs
 
+        self.results = []
+
         self.event_handler = AHEventHandler(self)
         self.event_handler.connect()
+
+    @property
+    def last_result(self):
+        return self.results[-1]
+
+    @property
+    def mappable(self):
+        mbl = self.last_result
+        if isinstance(mbl, tuple):
+            return mbl[-1]  # hist2d
+        return mbl
+# https://matplotlib.org/api/_as_gen/matplotlib.pyplot.hist2d.html
+# https://matplotlib.org/api/_as_gen/matplotlib.pyplot.hexbin.html
 
     def _get_norm(self, norm=None, norm_kw={}, **kwargs):
         try:
@@ -260,8 +275,8 @@ class AdaptiveHeatmap(object):
     def plot_main(self, name, *args, **kwargs):
         norm, kwargs = self._get_norm(**kwargs)
         f = getattr(self.ax_main, name)
-        self.mappable = f(*args, norm=norm, **kwargs)
-        return self.mappable
+        self.results.append(f(*args, norm=norm, **kwargs))
+        return self.last_result
 
     @property
     def zdata(self):
@@ -270,7 +285,7 @@ class AdaptiveHeatmap(object):
     def plot_all(self, name, *args, **kwargs):
         self.plot_main(name, *args, **kwargs)
         self.plot_sub()
-        return self.mappable
+        return self.last_result
 
     def _make_fun(name):
         def f(self, *args, **kwargs):
@@ -303,6 +318,8 @@ class AdaptiveHeatmap(object):
 
     contour = _make_fun('contour')
     contourf = _make_fun('contourf')
+    hexbin = _make_fun('hexbin')
+    hist2d = _make_fun('hist2d')
     imshow = _make_fun('imshow')
     matshow = _make_fun('matshow')
     pcolor = _make_fun('pcolor')
@@ -453,6 +470,8 @@ def make_shortcut(name):
 # Shortcuts:
 contour = make_shortcut('contour')
 contourf = make_shortcut('contourf')
+hexbin = make_shortcut('hexbin')
+hist2d = make_shortcut('hist2d')
 imshow = make_shortcut('imshow')
 matshow = make_shortcut('matshow')
 pcolor = make_shortcut('pcolor')
