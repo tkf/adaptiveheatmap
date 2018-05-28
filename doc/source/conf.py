@@ -205,7 +205,8 @@ sphinx_gallery_conf = {
     'reference_url': {
         'adaptiveheatmap': None,  # None for local document
     },
-    # Just for suppressing warning (for now):
-    'backreferences_dir': 'api',
+    # Reference examples from code:
+    'backreferences_dir': 'backreferences',
+    'doc_module': ('adaptiveheatmap',),
 }
 # http://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html

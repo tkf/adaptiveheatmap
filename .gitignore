@@ -7,5 +7,6 @@
 /dist
 /doc/build
 /doc/source/api
+/doc/source/backreferences
 /doc/source/gallery
 /src/*.egg-info

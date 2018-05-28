@@ -34,6 +34,11 @@ def cumhist(data, normed=True, ylabel=None, ax=None,
             **step_kwargs):
     """
     Plot cumulative distribution of `data`.
+
+    .. include:: backreferences/adaptiveheatmap.cumhist.examples
+    .. raw:: html
+
+        <div style='clear:both'></div>
     """
     if ax is None:
         ax = pyplot.gca()
@@ -277,6 +282,14 @@ def make_shortcut(name):
     -------
     ah : AdaptiveHeatmap
         `ah.mappable` holds whatever `matplotlib.axes.Axes.{name}` returns.
+
+    Examples
+    --------
+    .. include:: backreferences/adaptiveheatmap.{name}.examples
+    .. raw:: html
+
+        <div style='clear:both'></div>
+
     """.format(name=name)
     return f
 
