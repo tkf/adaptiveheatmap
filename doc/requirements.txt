@@ -1,1 +1,4 @@
-sphinx-gallery
+https://github.com/sphinx-gallery/sphinx-gallery/archive/2ed9e6bd8d4fae010478043815c03db98604f942.zip#egg=sphinx-gallery
+# Using unreleased sphinx-gallery to avoid DOCUMENTATION_OPTIONS error
+# (current released: 0.1.13)
+# https://github.com/sphinx-gallery/sphinx-gallery/issues/351

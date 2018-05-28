@@ -189,10 +189,14 @@ sphinx_gallery_conf = {
     'examples_dirs': '../../examples',
     # path where to save gallery generated examples
     'gallery_dirs': 'gallery',
+    # Link code to documentation
+    'reference_url': {
+        'adaptiveheatmap': None,  # None for local document
+    },
     # Just for suppressing warning (for now):
-    # https://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html#adding-references-to-examples
     'backreferences_dir': 'api',
 }
+# http://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html
 
 
 # -- Run custom pre-build commands -------------------------------------------
