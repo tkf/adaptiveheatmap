@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'adaptiveheatmap'
+project = u'adaptive​heatmap'  # Note: "ZERO WIDTH SPACE" before "heatmap"
 copyright = '2018, Takafumi Arakaki'
 author = 'Takafumi Arakaki'
 
@@ -89,8 +89,12 @@ html_theme = 'alabaster'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#
-# html_theme_options = {}
+# https://alabaster.readthedocs.io/en/latest/customization.html
+html_theme_options = {
+    'github_user': 'tkf',
+    'github_repo': 'adaptiveheatmap',
+    'fixed_sidebar': True,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -104,8 +108,16 @@ html_static_path = ['_static']
 # defined by theme itself.  Builtin themes are using these templates by
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
-#
-# html_sidebars = {}
+# https://alabaster.readthedocs.io/en/latest/installation.html
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
