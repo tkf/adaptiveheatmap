@@ -162,9 +162,14 @@ class AdaptiveHeatmap(object):
 
     def plot_main(self, name, *args, **kwargs):
         self.zdata = self._get_zdata(name, args, kwargs)
-        self.quantile_norm = QuantileNormalize.from_data(self.zdata)
+
+        norm = kwargs.pop('norm', None)
+        if norm is None:
+            norm = QuantileNormalize.from_data(self.zdata)
+        self.quantile_norm = norm
+
         f = getattr(self.ax_main, name)
-        self.mappable = f(*args, norm=self.quantile_norm, **kwargs)
+        self.mappable = f(*args, norm=norm, **kwargs)
         return self.mappable
 
     def plot_all(self, name, *args, **kwargs):
@@ -177,10 +182,25 @@ class AdaptiveHeatmap(object):
             return self.plot_main(name, *args, **kwargs)
         f.__name__ = name
         f.__doc__ = """
-        Run `matplotlib.axes.Axes.{name}` with adaptive heatmap colorbar.
+        Run |Axes.{name}| with adaptive heatmap colorbar.
 
-        This method takes whatever `matplotlib.axes.Axes.{name}` takes
-        and returns whatever it returns.
+        Parameters
+        ----------
+        *args
+        **kwargs
+            All positional and keyword arguments are passed to
+            |Axes.{name}| and use its default, except for the
+            following keyword arguments.
+        norm : QuantileNormalize
+            Unlike |Axes.{name}|, `norm` here defaults to an instance of
+            `QuantileNormalize` initialized with the data passed to this
+            function.
+
+        Returns
+        -------
+        Whatever |Axes.{name}| returns.
+
+        .. |Axes.{name}| replace:: `Axes.{name} <matplotlib.axes.Axes.{name}>`
         """.format(name=name)
         return f
 
@@ -281,20 +301,31 @@ class AdaptiveHeatmap(object):
 
 def make_shortcut(name):
     def f(*args, **kwargs):
-        ah = AdaptiveHeatmap.make()
+        ah_kw = kwargs.pop('ah_kw', {})
+        ah = AdaptiveHeatmap.make(**ah_kw)
         ah.plot_all(name, *args, **kwargs)
         return ah
     f.__name__ = name
     f.__doc__ = """
-    Adaptive heatmap version of `matplotlib.axes.Axes.{name}`.
+    Adaptive heatmap version of |Axes.{name}|.
 
-    All positional and keyword arguments are passed to
-    `matplotlib.axes.Axes.{name}`.
+    Parameters
+    ----------
+    *args
+    **kwargs
+        All positional and keyword arguments are passed to |Axes.{name}|
+        and use its default, except for the following keyword arguments.
+    norm : QuantileNormalize
+        Unlike |Axes.{name}|, `norm` here defaults to an instance of
+        `QuantileNormalize` initialized with the data passed to this
+        function.
+    ah_kw : dict
+        Keyword arguments passed to `AdaptiveHeatmap.make`.
 
     Returns
     -------
     ah : AdaptiveHeatmap
-        `ah.mappable` holds whatever `matplotlib.axes.Axes.{name}` returns.
+        `ah.mappable` holds whatever |Axes.{name}| returns.
 
     Examples
     --------
