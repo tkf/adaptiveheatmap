@@ -8,9 +8,35 @@ import numpy
 
 
 class QuantileNormalize(colors.Normalize):
+    """
+    Data normalization based on quantile function (inverse CDF).
+
+    Attributes
+    ----------
+    quantile : array
+        Sorted values on the original data space.
+    clip : bool
+        Passed to `matplotlib.colors.Normalize`.
+
+    """
 
     @classmethod
     def from_data(cls, data, qs=None, **kwargs):
+        """
+        Create `QuantileNormalize` by computing quantile of `data`.
+
+        Parameters
+        ----------
+        data : array
+            data from which quantile is computed.
+        qs : int or array, default: ``min(data.size, 100)``
+            If int, `qs`-quantiles are used.
+            If an array, ``qs * 100`` is passed to
+            `numpy.nanpercentile`.
+        **kwargs
+            Passed to `.__init__`.
+
+        """
         if qs is None:
             qs = min(data.size, 100)
         if numpy.isscalar(qs):
@@ -19,6 +45,9 @@ class QuantileNormalize(colors.Normalize):
         return cls(quantile, **kwargs)
 
     def __init__(self, quantile, clip=False):
+        """
+        Crate `QuantileNormalize` useing pre-computed `quantile`.
+        """
         self.quantile = quantile
         vmin = quantile[0]
         vmax = quantile[-1]
