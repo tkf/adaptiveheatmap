@@ -151,13 +151,17 @@ class AdaptiveHeatmap(object):
         self.event_handler = AHEventHandler(self)
         self.event_handler.connect()
 
-    def get_zdata(self, name, args):
-        return args[-1].flatten()
+    def _get_zdata(self, name, args, kwargs):
+        zdata = args[-1]
+        data = kwargs.get('data', None)
+        if data is not None:
+            zdata = data[zdata]
+        return zdata.flatten()
         # return self.mappable.get_array().flatten()
     # TODO: check if is it correct always
 
     def plot_main(self, name, *args, **kwargs):
-        self.zdata = self.get_zdata(name, args)
+        self.zdata = self._get_zdata(name, args, kwargs)
         self.quantile_norm = QuantileNormalize.from_data(self.zdata)
         f = getattr(self.ax_main, name)
         self.mappable = f(*args, norm=self.quantile_norm, **kwargs)
