@@ -21,7 +21,7 @@ class QuantileNormalize(colors.Normalize):
     """
 
     @classmethod
-    def from_data(cls, data, qs=None, **kwargs):
+    def from_data(cls, data, qs=None, vmin=None, vmax=None, **kwargs):
         """
         Create `QuantileNormalize` by computing quantile of `data`.
 
@@ -37,6 +37,8 @@ class QuantileNormalize(colors.Normalize):
             `numpy.nanpercentile`).  Note that usually `qs` should
             start at 0 (``qs[0] == 0``) and end at 1 (``qs[-1] == 1``)
             unless it is preferred to ignore extreme values.
+        vmin, vmax : float
+            Values in `data` outside of this range are ignored.
         **kwargs
             Passed to `.__init__`.
 
@@ -46,16 +48,27 @@ class QuantileNormalize(colors.Normalize):
         if numpy.isscalar(qs):
             qs = numpy.linspace(0, 1, qs + 1)
             # "+ 1" so that each element is a multiple of `1/qs`.
-        quantile = numpy.nanpercentile(data, qs * 100)
-        return cls(quantile, **kwargs)
 
-    def __init__(self, quantile, clip=False):
+        if numpy.ma.is_masked(data):
+            data = data.data[~data.mask]
+        data = numpy.ma.getdata(data)  # may still be a MaskedArray
+        if vmin is not None:
+            data = data[data >= vmin]
+        if vmax is not None:
+            data = data[data <= vmax]
+
+        quantile = numpy.nanpercentile(data, qs * 100)
+        return cls(quantile, vmin=vmin, vmax=vmax, **kwargs)
+
+    def __init__(self, quantile, vmin=None, vmax=None, clip=False):
         """
         Crate `QuantileNormalize` useing pre-computed `quantile`.
         """
         self.quantile = quantile
-        vmin = quantile[0]
-        vmax = quantile[-1]
+        if vmin is None:
+            vmin = quantile[0]
+        if vmax is None:
+            vmax = quantile[-1]
         colors.Normalize.__init__(self, vmin, vmax, clip)
 
     def __call__(self, value, clip=None):
@@ -234,6 +247,15 @@ class AdaptiveHeatmap(object):
         norm = kwargs.pop('norm', None)
         norm_kw = kwargs.pop('norm_kw', {})
         if norm is None:
+            norm_kw = dict(norm_kw)
+            for key in ('vmin', 'vmax'):
+                if key in kwargs:
+                    if key in norm_kw:
+                        # Or maybe just ignore?
+                        raise ValueError('{} passed as a keyword argument'
+                                         ' but also exists in norm_kw')
+                    # Should I pop?
+                    norm_kw[key] = kwargs[key]
             norm = QuantileNormalize.from_data(self.zdata, **norm_kw)
         self.norm = norm
 
