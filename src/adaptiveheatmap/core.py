@@ -67,7 +67,7 @@ class XYZRelation(object):
         self.lines = lines = []
         ah = self.ah
         z = ah.z_at(x, y)
-        p = ah.quantile_norm(z)
+        p = ah.norm(z)
 
         lines.extend(ah.ax_main.plot(x, y, marker=marker, color=color))
         lines.extend(ah.ax_cdf.plot(z, p, marker=marker, color=color))
@@ -130,6 +130,7 @@ class AdaptiveHeatmap(object):
     cax_original : `matplotlib.axes.Axes`
         Horizontal colorbar in the original Z-space.
     figure : `matplotlib.figure.Figure`
+    norm : `QuantileNormalize`
 
     """
 
@@ -199,7 +200,7 @@ class AdaptiveHeatmap(object):
         norm = kwargs.pop('norm', None)
         if norm is None:
             norm = QuantileNormalize.from_data(self.zdata)
-        self.quantile_norm = norm
+        self.norm = norm
 
         f = getattr(self.ax_main, name)
         self.mappable = f(*args, norm=norm, **kwargs)
@@ -254,7 +255,7 @@ class AdaptiveHeatmap(object):
     def colorbar_quantile(self):
         zmin = self.zdata.min()
         zmax = self.zdata.max()
-        gradient = self.quantile_norm(numpy.linspace(zmin, zmax, 256))
+        gradient = self.norm(numpy.linspace(zmin, zmax, 256))
         gradient = numpy.vstack((gradient, gradient))
         self.cax_quantile.imshow(
             gradient, aspect='auto',
