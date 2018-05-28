@@ -115,11 +115,41 @@ class AHEventHandler(object):
 
 
 class AdaptiveHeatmap(object):
+    """
+    Four-panel figure for visualizing heatmaps.
+
+    Attributes
+    ----------
+    ax_main : `matplotlib.axes.Axes`
+        Axes to plot the heatmap.
+    ax_cdf : `matplotlib.axes.Axes`
+        Axes to plot the cumulative distribution function (CDF).
+    cax_quantile : `matplotlib.axes.Axes`
+        Vertical colorbar along the cumulative distribution function
+        (CDF) axis.
+    cax_original : `matplotlib.axes.Axes`
+        Horizontal colorbar in the original Z-space.
+    figure : `matplotlib.figure.Figure`
+
+    """
 
     @classmethod
     def make(cls, cax_quantile_width_ratio=0.1, ax_cdf_width_ratio=0.5,
              cax_original_height_ratio=0.1,
              figure=None, **kwargs):
+        """
+        Create an `AdaptiveHeatmap` using `.GridSpec`.
+
+        Parameters
+        ----------
+        cax_original_height_ratio : float
+            The ratio of the height of `.cax_original` to `.ax_main`.
+        cax_quantile_width_ratio : float
+            The ratio of the width of `.cax_quantile` to `.ax_main`.
+        ax_cdf_width_ratio : float
+            The ratio of the width of `.ax_quantile` to `.ax_main`.
+
+        """
         gs = gridspec.GridSpec(
             2, 3,
             height_ratios=[1, cax_original_height_ratio],
@@ -141,6 +171,9 @@ class AdaptiveHeatmap(object):
 
     def __init__(self, ax_main, ax_cdf, cax_quantile, cax_original,
                  gs=None):
+        """
+        Create an `AdaptiveHeatmap` from pre-existing axes.
+        """
         self.ax_main = ax_main
         self.ax_cdf = ax_cdf
         self.cax_quantile = cax_quantile
