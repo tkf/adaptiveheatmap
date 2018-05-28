@@ -227,8 +227,9 @@ class AdaptiveHeatmap(object):
         self.zdata = self._get_zdata(name, args, kwargs)
 
         norm = kwargs.pop('norm', None)
+        norm_kw = kwargs.pop('norm_kw', {})
         if norm is None:
-            norm = QuantileNormalize.from_data(self.zdata)
+            norm = QuantileNormalize.from_data(self.zdata, **norm_kw)
         self.norm = norm
 
         f = getattr(self.ax_main, name)
@@ -258,6 +259,8 @@ class AdaptiveHeatmap(object):
             Unlike |Axes.{name}|, `norm` here defaults to an instance of
             `QuantileNormalize` initialized with the data passed to this
             function.
+        norm_kw : dict
+            Keyword arguments passed to `QuantileNormalize.from_data`.
 
         Returns
         -------
@@ -382,6 +385,8 @@ def make_shortcut(name):
         Unlike |Axes.{name}|, `norm` here defaults to an instance of
         `QuantileNormalize` initialized with the data passed to this
         function.
+    norm_kw : dict
+        Keyword arguments passed to `QuantileNormalize.from_data`.
     ah_kw : dict
         Keyword arguments passed to `AdaptiveHeatmap.make`.
 
