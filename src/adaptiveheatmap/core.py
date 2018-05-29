@@ -256,8 +256,9 @@ class AdaptiveHeatmap(object):
                         # Or maybe just ignore?
                         raise ValueError('{} passed as a keyword argument'
                                          ' but also exists in norm_kw')
-                    # Should I pop?
-                    norm_kw[key] = kwargs[key]
+                    # hist2d does not work when vmin/vmax is passed
+                    # with norm
+                    norm_kw[key] = kwargs.pop(key)
             norm = QuantileNormalize(**norm_kw)
         self.norm = norm
 
