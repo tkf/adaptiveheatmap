@@ -110,7 +110,7 @@ class XYZRelation(object):
     def __init__(self, ah):
         self.ah = ah
 
-    def draw(self, x, y, marker='o', color='k'):
+    def draw(self, x, y, marker='o', color='k', noline=False):
         self.lines = lines = []
         ah = self.ah
         z = ah.z_at(x, y)
@@ -118,10 +118,13 @@ class XYZRelation(object):
 
         lines.extend(ah.ax_main.plot(x, y, marker=marker, color=color))
         lines.extend(ah.ax_cdf.plot(z, p, marker=marker, color=color))
-        lines.append(ah.ax_cdf.axhline(p, color=color))
-        lines.append(ah.ax_cdf.axvline(z, color=color))
-        lines.append(ah.cax_quantile.axvline(z, color=color))
-        lines.append(ah.cax_original.axhline(p, color=color))
+        if not noline:
+            lines.append(ah.ax_cdf.axhline(p, color=color))
+            lines.append(ah.ax_cdf.axvline(z, color=color))
+            lines.append(ah.cax_quantile.axvline(z, color=color))
+            lines.append(ah.cax_original.axhline(p, color=color))
+        lines.append(ah.cax_quantile.plot(z, 0.5, marker=marker, color=color))
+        lines.append(ah.cax_original.plot(0.5, p, marker=marker, color=color))
 
         return self
 
