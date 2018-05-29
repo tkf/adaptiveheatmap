@@ -237,9 +237,12 @@ class AdaptiveHeatmap(object):
         self.event_handler = AHEventHandler(self)
         self.event_handler.connect()
 
-    def plot_main(self, name, *args, **kwargs):
-        norm = kwargs.pop('norm', None)
-        norm_kw = kwargs.pop('norm_kw', {})
+    def _get_norm(self, norm=None, norm_kw={}, **kwargs):
+        try:
+            return self.norm, kwargs
+        except AttributeError:
+            pass
+
         if norm is None:
             norm_kw = dict(norm_kw)
             for key in ('vmin', 'vmax'):
@@ -252,7 +255,10 @@ class AdaptiveHeatmap(object):
                     norm_kw[key] = kwargs[key]
             norm = QuantileNormalize(**norm_kw)
         self.norm = norm
+        return norm, kwargs
 
+    def plot_main(self, name, *args, **kwargs):
+        norm, kwargs = self._get_norm(**kwargs)
         f = getattr(self.ax_main, name)
         self.mappable = f(*args, norm=norm, **kwargs)
         return self.mappable
