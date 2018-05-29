@@ -18,7 +18,7 @@ ah = adaptiveheatmap.matshow(Z)
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
-ah.draw_xyz(40, 80)
+ah.relate_xyzq(40, 80)
 ah.figure.suptitle('matshow')
 
 pyplot.show()

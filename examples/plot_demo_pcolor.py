@@ -18,7 +18,7 @@ ah = adaptiveheatmap.pcolor(X, Y, Z, cmap='inferno')
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
-# ah.draw_xyz(1, -0.2)  # not supported
+# ah.relate_xyzq(1, -0.2)  # not supported
 ah.figure.suptitle('pcolor')
 
 pyplot.show()

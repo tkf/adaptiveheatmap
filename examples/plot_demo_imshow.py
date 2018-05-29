@@ -17,7 +17,7 @@ ah = adaptiveheatmap.imshow(Z, cmap='cividis')
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
-ah.draw_xyz(80, 40)
+ah.relate_xyzq(80, 40)
 ah.figure.suptitle('imshow')
 
 pyplot.show()

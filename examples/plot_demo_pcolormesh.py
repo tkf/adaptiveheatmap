@@ -18,7 +18,7 @@ ah = adaptiveheatmap.pcolormesh(X, Y, Z, cmap='plasma')
 ah.set_xlabel('X')
 ah.set_ylabel('Y')
 ah.set_zlabel('Z')
-ah.draw_xyz(1, -0.2)
+ah.relate_xyzq(1, -0.2)
 ah.figure.suptitle('pcolormesh')
 
 pyplot.show()

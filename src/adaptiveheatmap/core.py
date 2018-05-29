@@ -105,12 +105,12 @@ def cumhist(data, normed=True, ylabel=None, ax=None,
     return lines
 
 
-class XYZRelation(object):
+class XYZQRelation(object):
 
     def __init__(self, ah):
         self.ah = ah
 
-    def draw(self, x, y, marker='o', color='k', noline=False):
+    def plot(self, x, y, marker='o', color='k', noline=False):
         self.lines = lines = []
         ah = self.ah
         z = ah.z_at(x, y)
@@ -151,18 +151,18 @@ class AHEventHandler(object):
 
     def onclick(self, event):
         if event.inaxes is self.ah.ax_main:
-            self.redraw_xyz(event.xdata, event.ydata)
+            self.redraw_xyzq(event.xdata, event.ydata)
 
-    def redraw_xyz(self, x, y):
+    def redraw_xyzq(self, x, y):
         try:
-            xyz = self.xyz
+            xyzq = self.xyzq
         except AttributeError:
             pass
         else:
-            xyz.remove()
+            xyzq.remove()
 
         try:
-            self.xyz = self.ah.draw_xyz(x, y)
+            self.xyzq = self.ah.relate_xyzq(x, y)
         except NotImplementedError:
             return
 
@@ -396,8 +396,8 @@ class AdaptiveHeatmap(object):
                       ' from {}'.format(type(self.mappable)))
         raise NotImplementedError
 
-    def draw_xyz(self, *args, **kwargs):
-        return XYZRelation(self).draw(*args, **kwargs)
+    def relate_xyzq(self, *args, **kwargs):
+        return XYZQRelation(self).plot(*args, **kwargs)
 
 
 def make_shortcut(name):
