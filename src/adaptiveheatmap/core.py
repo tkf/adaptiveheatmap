@@ -275,6 +275,8 @@ class AdaptiveHeatmap(object):
         f.__doc__ = """
         Run |Axes.{name}| with adaptive heatmap colorbar.
 
+        .. |Axes.{name}| replace:: `Axes.{name} <matplotlib.axes.Axes.{name}>`
+
         Parameters
         ----------
         *args
@@ -292,8 +294,6 @@ class AdaptiveHeatmap(object):
         Returns
         -------
         Whatever |Axes.{name}| returns.
-
-        .. |Axes.{name}| replace:: `Axes.{name} <matplotlib.axes.Axes.{name}>`
         """.format(name=name)
         return f
 
