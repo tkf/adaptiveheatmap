@@ -16,6 +16,14 @@ class QuantileNormalize(colors.Normalize):
 
     Attributes
     ----------
+    qs : None, int or array
+        If an int, `qs`-quantiles are used; i.e., it is converted to
+        an array by ``qs = numpy.linspace(0, 1, qs + 1)``.
+        If an array, it must be an increasing sequence of numbers
+        between 0 and 1 (``qs * 100`` is passed to
+        `numpy.nanpercentile`).  Note that usually `qs` should start
+        at 0 (``qs[0] == 0``) and end at 1 (``qs[-1] == 1``) unless it
+        is preferred to ignore extreme values.
     quantile : array
         Sorted values on the original data space.
     vmin, vmax : float
@@ -24,29 +32,61 @@ class QuantileNormalize(colors.Normalize):
 
     """
 
-    @classmethod
-    def from_data(cls, data, qs=None, vmin=None, vmax=None, **kwargs):
-        """
-        Create `QuantileNormalize` by computing quantile of `data`.
+    def __init__(self, qs=None, quantile=None, **kwargs):
+        self.quantile = quantile
+        self.qs = qs
+        colors.Normalize.__init__(self, **kwargs)
 
-        Parameters
-        ----------
-        data : array
-            data from which quantile is computed.
-        qs : int or array, default: ``min(data.size, 100)``
-            If an int, `qs`-quantiles are used; i.e., it is converted
-            to an array by ``qs = numpy.linspace(0, 1, qs + 1)``.
-            If an array, it must be an increasing sequence of numbers
-            between 0 and 1 (``qs * 100`` is passed to
-            `numpy.nanpercentile`).  Note that usually `qs` should
-            start at 0 (``qs[0] == 0``) and end at 1 (``qs[-1] == 1``)
-            unless it is preferred to ignore extreme values.
-        vmin, vmax : float
-            Values in `data` outside of this range are ignored.
-        **kwargs
-            Passed to `.__init__`.
+        if self.scaled():
+            self._set_vmin_vmax()
 
-        """
+    def __call__(self, value, clip=None):
+        if clip is None:
+            clip = self.clip
+
+        data, is_scalar = self.process_value(value)
+
+        self.autoscale_None(data)
+
+        if clip:
+            mask = numpy.ma.getmask(data)
+            data = numpy.ma.array(numpy.clip(data.filled(self.vmax),
+                                             self.vmin, self.vmax),
+                                  mask=mask)
+            # The above handling is copied from Normalize.__call__().
+            # I have no idea the use-case and consequence of
+            # clip=True; I couldn't find a good example in matplotlib
+            # code.
+
+        idx = numpy.searchsorted(self.quantile, data)
+        result = idx / (len(self.quantile) - 1)
+        result = numpy.ma.masked_array(result, numpy.ma.getmask(value))
+        if is_scalar:
+            result = result[0]
+        return result
+# https://matplotlib.org/users/colormapnorms.html
+
+    def scaled(self):
+        return self.quantile is not None
+
+    def autoscale_None(self, data):
+        if not self.scaled():
+            self.autoscale(data)
+
+    def autoscale(self, data):
+        self._raw_data = data
+        self.quantile = self._calc_quantile(data, self.qs,
+                                            self.vmin, self.vmax)
+        self._set_vmin_vmax()
+
+    def _set_vmin_vmax(self):
+        if self.vmin is None:
+            self.vmin = self.quantile[0]
+        if self.vmax is None:
+            self.vmax = self.quantile[-1]
+
+    @staticmethod
+    def _calc_quantile(data, qs, vmin, vmax):
         if qs is None:
             qs = min(data.size, 100)
         if numpy.isscalar(qs):
@@ -59,25 +99,7 @@ class QuantileNormalize(colors.Normalize):
         if vmax is not None:
             data = data[data <= vmax]
 
-        quantile = numpy.nanpercentile(data, qs * 100)
-        return cls(quantile, vmin=vmin, vmax=vmax, **kwargs)
-
-    def __init__(self, quantile, vmin=None, vmax=None, clip=False):
-        """
-        Create `QuantileNormalize` useing pre-computed `quantile`.
-        """
-        self.quantile = quantile
-        if vmin is None:
-            vmin = quantile[0]
-        if vmax is None:
-            vmax = quantile[-1]
-        colors.Normalize.__init__(self, vmin, vmax, clip)
-
-    def __call__(self, value, clip=None):
-        idx = numpy.searchsorted(self.quantile, value)
-        data = idx / (len(self.quantile) - 1)
-        return numpy.ma.masked_array(data, numpy.ma.getmask(value))
-# https://matplotlib.org/users/colormapnorms.html
+        return numpy.nanpercentile(data, qs * 100)
 
 
 class XYZQRelation(object):
@@ -215,18 +237,7 @@ class AdaptiveHeatmap(object):
         self.event_handler = AHEventHandler(self)
         self.event_handler.connect()
 
-    def _get_zdata(self, name, args, kwargs):
-        zdata = args[-1]
-        data = kwargs.get('data', None)
-        if data is not None:
-            zdata = data[zdata]
-        return zdata.flatten()
-        # return self.mappable.get_array().flatten()
-    # TODO: check if is it correct always
-
     def plot_main(self, name, *args, **kwargs):
-        self.zdata = self._get_zdata(name, args, kwargs)
-
         norm = kwargs.pop('norm', None)
         norm_kw = kwargs.pop('norm_kw', {})
         if norm is None:
@@ -239,12 +250,16 @@ class AdaptiveHeatmap(object):
                                          ' but also exists in norm_kw')
                     # Should I pop?
                     norm_kw[key] = kwargs[key]
-            norm = QuantileNormalize.from_data(self.zdata, **norm_kw)
+            norm = QuantileNormalize(**norm_kw)
         self.norm = norm
 
         f = getattr(self.ax_main, name)
         self.mappable = f(*args, norm=norm, **kwargs)
         return self.mappable
+
+    @property
+    def zdata(self):
+        return self.norm._raw_data
 
     def plot_all(self, name, *args, **kwargs):
         self.plot_main(name, *args, **kwargs)
@@ -272,7 +287,7 @@ class AdaptiveHeatmap(object):
             `QuantileNormalize` initialized with the data passed to this
             function.
         norm_kw : dict
-            Keyword arguments passed to `QuantileNormalize.from_data`.
+            Keyword arguments passed to `QuantileNormalize`.
 
         Returns
         -------
@@ -409,7 +424,7 @@ def make_shortcut(name):
         `QuantileNormalize` initialized with the data passed to this
         function.
     norm_kw : dict
-        Keyword arguments passed to `QuantileNormalize.from_data`.
+        Keyword arguments passed to `QuantileNormalize`.
     ah_kw : dict
         Keyword arguments passed to `AdaptiveHeatmap.make`.
 
