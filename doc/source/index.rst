@@ -13,6 +13,13 @@ Welcome to adaptiveheatmap's documentation!
    api.rst
    gallery/index.rst
 
+
+.. toctree::
+   :hidden:
+
+   internals.rst
+
+
 Indices and tables
 ==================
 
