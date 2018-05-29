@@ -10,6 +10,10 @@
    matshow
    pcolor
    pcolormesh
+
+   hexbin
+   hist2d
+
    cumhist
 
 
@@ -20,6 +24,10 @@ High-level interface
 .. autofunction:: matshow
 .. autofunction:: pcolor
 .. autofunction:: pcolormesh
+
+.. autofunction:: hexbin
+.. autofunction:: hist2d
+
 .. autofunction:: cumhist
 
 
