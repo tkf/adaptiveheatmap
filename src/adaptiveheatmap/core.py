@@ -386,7 +386,7 @@ class AdaptiveHeatmap(object):
             nx, ny = zs.shape
             left, right, bottom, top = self.mappable.get_extent()
             ix = int((x - left) / (right - left) * (nx - 1))
-            iy = int((x - bottom) / (top - bottom) * (ny - 1))
+            iy = int((y - bottom) / (top - bottom) * (ny - 1))
             return zs[ix, iy]
         elif isinstance(self.mappable, QuadMesh):
             coords = self.mappable._coordinates[1:, 1:, :]
