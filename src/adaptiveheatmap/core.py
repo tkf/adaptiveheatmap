@@ -1,3 +1,4 @@
+import inspect
 import warnings
 
 from matplotlib import colors
@@ -337,15 +338,19 @@ class AdaptiveHeatmap(object):
 # https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.tick_params.html
 
     def set_xlabel(self, label):
+        """ Set x-axis label of `.ax_main`. """
         self.ax_main.set_xlabel(label)
 
     def set_ylabel(self, label):
+        """ Set y-axis label of `.ax_main`. """
         self.ax_main.set_ylabel(label)
 
     def set_zlabel(self, label):
+        """ Set "z-axis" label of `.cax_quantile`. """
         self.cax_quantile.set_xlabel(label)
 
     def set_plabel(self, label):
+        """ Set "q-axis" label of `.ax_cdf`. """
         self.ax_cdf.set_ylabel(label)
 
     def z_at(self, x, y):
@@ -371,7 +376,15 @@ class AdaptiveHeatmap(object):
         raise NotImplementedError
 
     def relate_xyzq(self, *args, **kwargs):
+        """
+        Plot auxiliary lines and points to relate data at ``(x, y)``.
+        """
         return XYZQRelation(self).plot(*args, **kwargs)
+
+    try:
+        relate_xyzq.__signature__ = inspect.signature(XYZQRelation.plot)
+    except AttributeError:
+        pass
 
 
 def make_shortcut(name):
