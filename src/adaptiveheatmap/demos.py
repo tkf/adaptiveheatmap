@@ -28,6 +28,24 @@ def data_three_circles(N=100, A0=100, A1=1000, A2=-100):
     return X, Y, Z
 
 
+def data_circles_and_nans(N=100, A0=100, A1=-100):
+    X, Y = numpy.mgrid[-2:2:complex(0, N), -2:2:complex(0, N)]
+    V = X + 1j * Y
+    Z = numpy.sin(abs(V) * 10)
+
+    r0 = r1 = r2 = r3 = 0.9
+    c0 = complex(-1, -1)
+    c1 = complex(+1, +1)
+    c2 = complex(+1, -1)
+    c3 = complex(-1, +1)
+    Z[abs(V - c0) < r0] += A0
+    Z[abs(V - c1) < r1] += A1
+    Z[abs(V - c2) < r2] = numpy.nan
+    Z[abs(V - c3) < r3] = numpy.nan
+
+    return X, Y, Z
+
+
 def demo_contour(**kwargs):
     _, _, Z = data_hump_and_spike(**kwargs)
     ah = core.contour(Z)
@@ -86,4 +104,10 @@ def demo_pcolormesh(**kwargs):
     ah.set_zlabel('Z')
     # ah.set_plabel('CDF')
     ah.figure.suptitle('pcolormesh')
+    return ah
+
+
+def demo_circles_and_nans(**kwargs):
+    X, Y, Z = data_circles_and_nans(**kwargs)
+    ah = core.pcolormesh(X, Y, Z)
     return ah

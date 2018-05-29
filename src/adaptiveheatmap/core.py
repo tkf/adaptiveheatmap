@@ -73,7 +73,8 @@ class QuantileNormalize(colors.Normalize):
 
     def __call__(self, value, clip=None):
         idx = numpy.searchsorted(self.quantile, value)
-        return numpy.ma.masked_array(idx / (len(self.quantile) - 1))
+        data = idx / (len(self.quantile) - 1)
+        return numpy.ma.masked_array(data, numpy.ma.getmask(value))
 # https://matplotlib.org/users/colormapnorms.html
 
 
@@ -320,8 +321,8 @@ class AdaptiveHeatmap(object):
         self.plot_cdf()
 
     def colorbar_quantile(self):
-        zmin = self.zdata.min()
-        zmax = self.zdata.max()
+        zmin = numpy.nanmin(self.zdata)
+        zmax = numpy.nanmax(self.zdata)
         gradient = self.norm(numpy.linspace(zmin, zmax, 256))
         gradient = numpy.vstack((gradient, gradient))
         self.cax_quantile.imshow(
