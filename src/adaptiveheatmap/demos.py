@@ -12,6 +12,22 @@ def data_hump_and_spike(N=100, hump_scale=10.0):
 # https://matplotlib.org/users/colormapnorms.html#logarithmic
 
 
+def data_three_circles(N=100, A0=100, A1=1000, A2=-100):
+    X, Y = numpy.mgrid[-2:2:complex(0, N), -1:3:complex(0, N)]
+    V = X + 1j * Y
+    Z = numpy.sin(abs(V) * 10)
+
+    r0 = r1 = r2 = 0.9
+    c0 = complex(0, numpy.tan(numpy.pi / 3))
+    c1 = complex(1, 0)
+    c2 = -c1
+    Z[abs(V - c0) < r0] += A0
+    Z[abs(V - c1) < r1] += A1
+    Z[abs(V - c2) < r2] += A2
+
+    return X, Y, Z
+
+
 def demo_contour(**kwargs):
     _, _, Z = data_hump_and_spike(**kwargs)
     ah = core.contour(Z)
