@@ -12,10 +12,17 @@ import adaptiveheatmap
 
 pyplot.style.use("ggplot")
 
-x = numpy.random.randn(100000)
+x = numpy.exp(numpy.random.randn(100000))
 y = numpy.random.randn(100000)
-ah = adaptiveheatmap.hexbin(x, y, cmap='cividis')
+ah = adaptiveheatmap.hexbin(x, y, vmin=1)
 # ah.relate_xyzq(0.5, 0.5)  # not supported
-ah.figure.suptitle('hexbin')
+ah.figure.suptitle('adaptiveheatmap.hexbin')
+ah.ax_main.set_xlim(xmax=30)
+
+pyplot.figure()
+pyplot.hexbin(x, y, vmin=1)
+pyplot.colorbar()
+pyplot.suptitle('pyplot.hexbin')
+pyplot.xlim(xmax=30)
 
 pyplot.show()
