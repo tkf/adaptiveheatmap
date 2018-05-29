@@ -102,7 +102,7 @@ def demo_pcolormesh(**kwargs):
     ah.set_xlabel('X')
     ah.set_ylabel('Y')
     ah.set_zlabel('Z')
-    # ah.set_plabel('CDF')
+    # ah.set_qlabel('CDF')
     ah.figure.suptitle('pcolormesh')
     return ah
 

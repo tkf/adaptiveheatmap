@@ -349,7 +349,7 @@ class AdaptiveHeatmap(object):
         """ Set "z-axis" label of `.cax_quantile`. """
         self.cax_quantile.set_xlabel(label)
 
-    def set_plabel(self, label):
+    def set_qlabel(self, label):
         """ Set "q-axis" label of `.ax_cdf`. """
         self.ax_cdf.set_ylabel(label)
 
