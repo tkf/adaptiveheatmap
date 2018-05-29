@@ -18,8 +18,9 @@ class QuantileNormalize(colors.Normalize):
     ----------
     quantile : array
         Sorted values on the original data space.
+    vmin, vmax : float
     clip : bool
-        Passed to `matplotlib.colors.Normalize`.
+        See: `matplotlib.colors.Normalize`.
 
     """
 
@@ -63,7 +64,7 @@ class QuantileNormalize(colors.Normalize):
 
     def __init__(self, quantile, vmin=None, vmax=None, clip=False):
         """
-        Crate `QuantileNormalize` useing pre-computed `quantile`.
+        Create `QuantileNormalize` useing pre-computed `quantile`.
         """
         self.quantile = quantile
         if vmin is None:
