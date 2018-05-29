@@ -116,15 +116,20 @@ class XYZRelation(object):
         z = ah.z_at(x, y)
         p = ah.norm(z)
 
-        lines.extend(ah.ax_main.plot(x, y, marker=marker, color=color))
-        lines.extend(ah.ax_cdf.plot(z, p, marker=marker, color=color))
+        marker_kw = dict(
+            marker=marker,
+            color=color
+        )
+
+        lines.extend(ah.ax_main.plot(x, y, **marker_kw))
+        lines.extend(ah.ax_cdf.plot(z, p, **marker_kw))
         if not noline:
             lines.append(ah.ax_cdf.axhline(p, color=color))
             lines.append(ah.ax_cdf.axvline(z, color=color))
             lines.append(ah.cax_quantile.axvline(z, color=color))
             lines.append(ah.cax_original.axhline(p, color=color))
-        lines.append(ah.cax_quantile.plot(z, 0.5, marker=marker, color=color))
-        lines.append(ah.cax_original.plot(0.5, p, marker=marker, color=color))
+        lines.append(ah.cax_quantile.plot(z, 0.5, **marker_kw))
+        lines.append(ah.cax_original.plot(0.5, p, **marker_kw))
 
         return self
 
