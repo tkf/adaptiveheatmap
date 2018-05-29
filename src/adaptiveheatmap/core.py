@@ -396,11 +396,14 @@ class AdaptiveHeatmap(object):
     def z_at(self, x, y):
         zs = self.mappable.get_array()
         if zs.ndim == 2 and hasattr(self.mappable, 'get_extent'):
-            nx, ny = zs.shape
+            ny, nx = zs.shape
             left, right, bottom, top = self.mappable.get_extent()
             ix = int((x - left) / (right - left) * (nx - 1))
-            iy = int((y - bottom) / (top - bottom) * (ny - 1))
-            return zs[ix, iy]
+            if self.mappable.origin == 'upper':
+                iy = int((top - y) / (top - bottom) * (ny - 1))
+            else:
+                iy = int((y - bottom) / (top - bottom) * (ny - 1))
+            return zs[iy, ix]
         elif isinstance(self.mappable, QuadMesh):
             coords = self.mappable._coordinates[1:, 1:, :]
             point = numpy.array([x, y]).reshape((1, 1, 2))
