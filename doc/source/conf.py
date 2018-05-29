@@ -6,15 +6,22 @@
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
 
+from __future__ import print_function
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
+import os
+import shutil
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+# https://docs.readthedocs.io/en/latest/builds.html#build-environment
+# https://docs.readthedocs.io/en/latest/faq.html#how-do-i-change-behavior-for-read-the-docs
 
 
 # -- Project information -----------------------------------------------------
@@ -217,3 +224,15 @@ sphinx_gallery_conf = {
     'doc_module': ('adaptiveheatmap',),
 }
 # http://sphinx-gallery.readthedocs.io/en/latest/advanced_configuration.html
+
+
+def _remove_gallery():
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gallery')
+    if os.path.exists(path):
+        print("*** doc/source/gallery exists! ***")
+        print("Removing", path, "...")
+        shutil.rmtree(path, ignore_errors=True)
+        print(path, "removed!")
+
+if on_rtd:
+    _remove_gallery()
