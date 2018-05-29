@@ -125,8 +125,8 @@ class XYZQRelation(object):
             lines.append(ah.ax_cdf.axvline(z, color=color))
             lines.append(ah.cax_quantile.axvline(z, color=color))
             lines.append(ah.cax_original.axhline(p, color=color))
-        lines.append(ah.cax_quantile.plot(z, 0.5, **marker_kw))
-        lines.append(ah.cax_original.plot(0.5, p, **marker_kw))
+        lines.extend(ah.cax_quantile.plot(z, 0.5, **marker_kw))
+        lines.extend(ah.cax_original.plot(0.5, p, **marker_kw))
 
         return self
 
