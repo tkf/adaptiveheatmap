@@ -75,8 +75,8 @@ class QuantileNormalize(colors.Normalize):
 
     def autoscale(self, data):
         self._raw_data = data
-        self.quantile = self._calc_quantile(data, self.qs,
-                                            self.vmin, self.vmax)
+        self._filtered_data = self._filter_data(data, self.vmin, self.vmax)
+        self.quantile = self._calc_quantile(self._filtered_data, self.qs)
         self._set_vmin_vmax()
 
     def _set_vmin_vmax(self):
@@ -86,20 +86,23 @@ class QuantileNormalize(colors.Normalize):
             self.vmax = self.quantile[-1]
 
     @staticmethod
-    def _calc_quantile(data, qs, vmin, vmax):
+    def _calc_quantile(data, qs):
         if qs is None:
             qs = min(data.size, 100)
         if numpy.isscalar(qs):
             qs = numpy.linspace(0, 1, qs + 1)
             # "+ 1" so that each element is a multiple of `1/qs`.
 
+        return numpy.nanpercentile(data, qs * 100)
+
+    @staticmethod
+    def _filter_data(data, vmin, vmax):
         data = finitevalues(data)
         if vmin is not None:
             data = data[data >= vmin]
         if vmax is not None:
             data = data[data <= vmax]
-
-        return numpy.nanpercentile(data, qs * 100)
+        return data
 
 
 class XYZQRelation(object):
@@ -270,6 +273,10 @@ class AdaptiveHeatmap(object):
     def zdata(self):
         return self.norm._raw_data
 
+    @property
+    def filtered_zdata(self):
+        return self.norm._filtered_data
+
     def plot_all(self, name, *args, **kwargs):
         self.plot_main(name, *args, **kwargs)
         self.plot_sub()
@@ -354,7 +361,7 @@ class AdaptiveHeatmap(object):
 # https://matplotlib.org/examples/color/colormaps_reference.html
 
     def plot_cdf(self):
-        cumhist(self.zdata, ax=self.ax_cdf)
+        cumhist(self.filtered_zdata, ax=self.ax_cdf)
 
         self.ax_cdf.yaxis.tick_right()
         self.ax_cdf.yaxis.set_label_position('right')
