@@ -29,10 +29,10 @@ def finitevalues(data):
     ...     [1, 0, 0, 1],
     ...     [1, 0, 1, 0],
     ... ]))
-    array([1., 2., 3., 4.])
+    array([2., 4.])
 
     """
-    data = numpy.asarray(data)
+    data = numpy.asanyarray(data)
     if numpy.ma.is_masked(data):
         data = data.data[~data.mask]
     data = numpy.ma.getdata(data)  # may still be a MaskedArray
