@@ -6,6 +6,8 @@ from matplotlib import pyplot
 from matplotlib.collections import QuadMesh
 import numpy
 
+from .utils import finitevalues, cumhist, undo_xylim
+
 
 class QuantileNormalize(colors.Normalize):
     """
@@ -49,9 +51,7 @@ class QuantileNormalize(colors.Normalize):
             qs = numpy.linspace(0, 1, qs + 1)
             # "+ 1" so that each element is a multiple of `1/qs`.
 
-        if numpy.ma.is_masked(data):
-            data = data.data[~data.mask]
-        data = numpy.ma.getdata(data)  # may still be a MaskedArray
+        data = finitevalues(data)
         if vmin is not None:
             data = data[data >= vmin]
         if vmax is not None:
@@ -76,34 +76,6 @@ class QuantileNormalize(colors.Normalize):
         data = idx / (len(self.quantile) - 1)
         return numpy.ma.masked_array(data, numpy.ma.getmask(value))
 # https://matplotlib.org/users/colormapnorms.html
-
-
-def cumhist(data, normed=True, ylabel=None, ax=None,
-            **step_kwargs):
-    """
-    Plot cumulative distribution of `data`.
-
-    .. include:: backreferences/adaptiveheatmap.cumhist.examples
-    .. raw:: html
-
-        <div style='clear:both'></div>
-    """
-    if ax is None:
-        ax = pyplot.gca()
-    if ylabel is None:
-        if normed:
-            ylabel = 'Cumulative Probability'
-        else:
-            ylabel = 'Cumulative Count'
-    if normed:
-        ys = numpy.linspace(1/len(data), 1, len(data))
-    else:
-        ys = numpy.arange(1, len(data))
-
-    data = numpy.sort(data)
-    lines = ax.step(data, ys, **step_kwargs)
-    ax.set_ylabel(ylabel)
-    return lines
 
 
 class XYZQRelation(object):
@@ -316,9 +288,10 @@ class AdaptiveHeatmap(object):
     del _make_fun
 
     def plot_sub(self):
-        self.colorbar_quantile()
-        self.colorbar_original()
         self.plot_cdf()
+        with undo_xylim(self.ax_cdf):
+            self.colorbar_quantile()
+            self.colorbar_original()
 
     def colorbar_quantile(self):
         zmin = numpy.nanmin(self.zdata)
